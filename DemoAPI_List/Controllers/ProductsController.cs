@@ -1,5 +1,6 @@
 ﻿using DemoAPI_List.Models;
 using DemoAPI_List.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,8 +18,8 @@ namespace DemoAPI_List.Controllers
         {
             _productService = productService;
         }
-
-        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        [HttpGet("[action]")]
         public async Task<ActionResult<List<Product>>> GetProducts()
         {
             var products = await _productService.GetAllProducts();
@@ -35,7 +36,7 @@ namespace DemoAPI_List.Controllers
             return Ok(product);
         }
 
-        [HttpPost]
+        [HttpPost("[action]")]
         public async Task<ActionResult<Product>> AddProduct([FromBody] Product product)
         {
             var newProduct = await _productService.AddProduct(product);
